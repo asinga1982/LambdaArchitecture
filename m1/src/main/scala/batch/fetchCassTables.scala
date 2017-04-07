@@ -29,15 +29,20 @@ object fetchCassTables {
 
     val rdd2 = sc.cassandraTable("lambda", "batch_visitors_by_product")
 
-    val rdd3 = sc.cassandraTable("lambda", "batch_activity_by_product")
+    val rdd3 = sc.cassandraTable("lambda", "batch_activity_by_product").select("product", "timestamp_hour")
+      //.where("product == CVS Pharmacy,200mg Ibuprofen Capsules")
 
-    println("RDD1 Content")
-    rdd1.foreach(println)
+    // Join by RDD
+    val rdd4 = rdd1.joinWithCassandraTable("lambda", "batch_activity_by_product")
 
+    println("RDD4 Content")
+    rdd4.foreach(println)
+    /*
     println("RDD2 Content")
     rdd2.foreach(println)
 
     println("RDD3 Content")
     rdd3.foreach(println)
+  */
   }
 }
